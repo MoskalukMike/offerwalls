@@ -1,0 +1,7 @@
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Letsencrypt certificates
+0 */3 */1 * * certbot renew --allow-subset-of-names
+
+# Rotating nginx logs
+0 */6 * * * logrotate /etc/logrotate.d/nginx

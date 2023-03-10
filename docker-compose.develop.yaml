@@ -1,0 +1,23 @@
+version: '2.4'
+
+services:
+  offerwall-nginx:
+    container_name: offerwall-nginx
+    build: ./docker/nginx
+    hostname: offerwall-nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./app:/app
+      - ./docker/nginx/config/app-dev.conf:/etc/nginx/conf.d/app.conf
+    networks:
+      - offerwall-nginx-network
+    restart: always
+    ulimits:
+      nofile:
+        soft: 128000
+        hard: 128000
+
+networks:
+  offerwall-nginx-network:
+    external: true
