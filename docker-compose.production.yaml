@@ -11,8 +11,8 @@ services:
     volumes:
       - ./app:/app
       - ./docker/nginx/config/app-prod.conf:/etc/nginx/conf.d/app.conf
-      - /data/docker/offerwall/nginx/logs:/var/log/nginx
-      - /data/docker/offerwall/nginx/letsencrypt:/etc/letsencrypt
+      - /data/docker/offerwalls/nginx/logs:/var/log/nginx
+      - /etc/letsencrypt:/etc/letsencrypt
       - ./docker/nginx/letsencrypt/cli.ini:/etc/letsencrypt/cli.ini
     networks:
       - offerwall-network

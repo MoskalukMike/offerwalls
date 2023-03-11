@@ -11,7 +11,7 @@ services:
       - ./app:/app
       - ./docker/nginx/config/app-dev.conf:/etc/nginx/conf.d/app.conf
     networks:
-      - offerwa-network
+      - offerwall-network
     restart: always
     ulimits:
       nofile:
@@ -19,5 +19,5 @@ services:
         hard: 128000
 
 networks:
-  offerwa-network:
+  offerwall-network:
     external: true
