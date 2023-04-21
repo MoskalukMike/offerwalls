@@ -19,6 +19,12 @@ $( document ).ready(function() {
         showMore = true;
     }
 
+    let ver3 = false;
+    if (getUrlParameter('ver') === '3') {
+        ver3 = true;
+    }
+
+
     let hideClass = '';
     $.ajax({
         url: url,
@@ -29,8 +35,13 @@ $( document ).ready(function() {
                     if (index >= 2) {
                         hideClass = 'hide-card';
                     }
-                    if (index == 2) {
+                    if (index === 2) {
                         $('#cards').append("<span class=\"show-more\" onclick='show_fn()'>Показать еще</span>");
+                    }
+                }
+                if (ver3) {
+                    if (index >= 3) {
+                        hideClass = 'hide-card';
                     }
                 }
 
