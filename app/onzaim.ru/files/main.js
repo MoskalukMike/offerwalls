@@ -2,16 +2,39 @@ $( document ).ready(function() {
     let source_name = 'onzaim_ru';
     let url = 'https://crm.fin.media/api/vitrinaTemplate/' + source_name;
 
-    let addParams = '&aff_sub3=' + getUrlParameter('hyp')
-        + '&aff_sub4=' + getUrlParameter('type')
-        + '&aff_sub5=' + getUrlParameter('visit');
+    let addParams = '';
 
+    if (getUrlParameter('type')) {
+        addParams += '&aff_sub3=' + getUrlParameter('type');
+    }
+    if (getUrlParameter('hyp')) {
+        addParams += '&aff_sub4=' + getUrlParameter('hyp');
+    }
+    if (getUrlParameter('visit')) {
+        addParams += '&aff_sub5=' + getUrlParameter('visit');
+    }
+
+    let showMore = false;
+    if (getUrlParameter('ver') === '2') {
+        showMore = true;
+    }
+
+    let hideClass = '';
     $.ajax({
         url: url,
         method: 'GET',
         success: function(res) {
-            res.forEach(function(card){
-                $('#cards').append("<a href=\"" + card.link + addParams + "\" onclick='click_fn(" + card.offerId + ");' target=\"_blank\" class=\"row item\" data-special=\"0\">\n" +
+            res.forEach(function(card, index){
+                if (showMore) {
+                    if (index >= 2) {
+                        hideClass = 'hide-card';
+                    }
+                    if (index == 2) {
+                        $('#cards').append("<span class=\"show-more\" onclick='show_fn()'>Показать еще</span>");
+                    }
+                }
+
+                $('#cards').append("<a href=\"" + card.link + addParams + "\" onclick='click_fn(" + card.offerId + ");' target=\"_blank\" class=\"row item " + hideClass + " \" data-special=\"0\">\n" +
                     "                     <div class=\"col\">\n" +
                     "                        <picture>\n" +
                     "                          \n" +
@@ -25,7 +48,9 @@ $( document ).ready(function() {
                     "                     <div class=\"col\"> <span style=\"margin: 2px 0px -10px;\" class=\"vozrast\">" + card.age + " лет</span> </div>\n" +
                     "                     <div class=\"col\"> <span class=\"link\" style=\"text-decoration: none;\">Получить деньги</span> \n" +
                     "                     </div>\n" +
-                    "                  </a>")
+                    "                  </a>");
+
+
             })
         },
         error: function(res){
@@ -52,6 +77,11 @@ $(document).ready(function() {
         ga('send', 'event', 'offer_wall', 'sit_on_offer_wall');
     },20000)
 });
+
+show_fn = function () {
+    $('.show-more').hide();
+    $('.hide-card').toggleClass('hide-card');
+}
 
 click_fn = function (offerId) {
     ym(counter, 'reachGoal', 'any_offer_click');
