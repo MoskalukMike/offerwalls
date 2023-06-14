@@ -2,17 +2,43 @@ $( document ).ready(function() {
     let source_name = 'zaim_info';
     let url = 'https://crm.fin.media/api/vitrinaTemplate/' + source_name;
 
-    let addParams = '&aff_sub2=' + getUrlParameter('source')
-        + '&aff_sub3=' + getUrlParameter('type')
-        + '&aff_sub4=' + getUrlParameter('hyp')
-        + '&aff_sub5=' + getUrlParameter('visit');
+    // let addParams = '&aff_sub2=' + getUrlParameter('source')
+    //     + '&aff_sub3=' + getUrlParameter('type')
+    //     + '&aff_sub4=' + getUrlParameter('hyp')
+    //     + '&aff_sub5=' + getUrlParameter('visit');
 
+    let addParams = '';
+
+    if (getUrlParameter('hyp')) {
+        addParams += '&aff_sub3=' + getUrlParameter('hyp');
+    }
+
+    if (getUrlParameter('type')) {
+        addParams += '&aff_sub4=' + getUrlParameter('type');
+    } else {
+        let now = new Date();
+        let date = now.getFullYear() + '-' + ('0' + (now.getMonth()+1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
+        addParams += '&aff_sub4=' + date;
+    }
+
+    if (getUrlParameter('visit')) {
+        addParams += '&aff_sub5=' + getUrlParameter('visit');
+    }
+
+    let hideClass = '';
     $.ajax({
         url: url,
         method: 'GET',
         success: function(res) {
-            res.forEach(function(card){
-                $('#cards').append("<a href=\"" + card.link + addParams + "\" onclick='click_fn(" + card.offerId + ");' target=\"_blank\" id='" + card.offerId + "' class=\"row item card_item\" data-special=\"0\">\n" +
+            res.forEach(function(card, index){
+                if (index >= 3) {
+                    hideClass = 'hide-card';
+                }
+                if (index === 3) {
+                    $('#cards').append("<span class=\"show-more\" onclick='show_fn()'>Показать еще</span>");
+                }
+
+                $('#cards').append("<a href=\"" + card.link + addParams + "\" onclick='click_fn(" + card.offerId + ");' target=\"_blank\" id='" + card.offerId + "' class=\"row item " + hideClass + " card_item\" data-special=\"0\">\n" +
                     "                     <div class=\"col\">\n" +
                     "                        <picture>\n" +
                     "                          \n" +
@@ -70,6 +96,10 @@ click_fn = function (offerId) {
 
 ga = function (couter, type, category, event) {
     // console.log('ga' + '_' + couter + '_' + type + '_' + event);
+}
+show_fn = function () {
+    $('.show-more').hide();
+    $('.hide-card').toggleClass('hide-card');
 }
 
 number_format = function (number, decimals, dec_point, thousands_sep) {

@@ -4,26 +4,26 @@ $( document ).ready(function() {
 
     let addParams = '';
 
-    if (getUrlParameter('type')) {
-        addParams += '&aff_sub3=' + getUrlParameter('type');
-    }
     if (getUrlParameter('hyp')) {
-        addParams += '&aff_sub4=' + getUrlParameter('hyp');
+        addParams += '&aff_sub3=' + getUrlParameter('hyp');
     }
+
+    if (getUrlParameter('type')) {
+        addParams += '&aff_sub4=' + getUrlParameter('type');
+    }
+
     if (getUrlParameter('visit')) {
         addParams += '&aff_sub5=' + getUrlParameter('visit');
     }
 
-    let showMore = false;
-    if (getUrlParameter('ver') === '2') {
-        showMore = true;
-    }
+    let showMore = true;
 
     let ver3 = false;
     if (getUrlParameter('ver') === '3') {
         ver3 = true;
     }
 
+    let offerPosition = 0;
 
     let hideClass = '';
     $.ajax({
@@ -31,11 +31,12 @@ $( document ).ready(function() {
         method: 'GET',
         success: function(res) {
             res.forEach(function(card, index){
+                offerPosition = index + 1;
                 if (showMore) {
-                    if (index >= 2) {
+                    if (index >= 3) {
                         hideClass = 'hide-card';
                     }
-                    if (index === 2) {
+                    if (index === 3) {
                         $('#cards').append("<span class=\"show-more\" onclick='show_fn()'>Показать еще</span>");
                     }
                 }
@@ -45,7 +46,7 @@ $( document ).ready(function() {
                     }
                 }
 
-                $('#cards').append("<a href=\"" + card.link + addParams + "\" onclick='click_fn(" + card.offerId + ");' target=\"_blank\" class=\"row item " + hideClass + " \" data-special=\"0\">\n" +
+                $('#cards').append("<a href=\"" + card.link + addParams + "\" onclick='click_fn(" + offerPosition + ");' target=\"_blank\" class=\"row item " + hideClass + " \" data-special=\"0\">\n" +
                     "                     <div class=\"col\">\n" +
                     "                        <picture>\n" +
                     "                          \n" +
@@ -69,6 +70,8 @@ $( document ).ready(function() {
             console.log('error');
         }
     });
+
+    $('.year')
 });
 
 let counter = '92845807';
@@ -95,6 +98,7 @@ show_fn = function () {
 }
 
 click_fn = function (offerId) {
+    console.log('offer_position: ' + offerId);
     ym(counter, 'reachGoal', 'any_offer_click');
     ga('send', 'event', 'offer_wall', 'any_offer_click');
 
